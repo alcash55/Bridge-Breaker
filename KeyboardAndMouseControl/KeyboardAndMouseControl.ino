@@ -1,6 +1,8 @@
 /*
   KeyboardAndMouseControl
 
+  This is a test, hello world
+
   Controls the mouse from five pushbuttons on an Arduino Leonardo, Micro or Due.
 
   Hardware:
