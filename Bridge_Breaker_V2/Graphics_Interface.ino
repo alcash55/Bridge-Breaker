@@ -119,8 +119,17 @@ void graphics_main_screen()
   u8g2.drawStr(67, 32, "Time Elapsed s");
   u8g2.drawStr(2, 32, "Displacement");
   u8g2.drawStr(2, 60, "Force");
-  u8g2.drawFrame(65,9,63,27);
-u8g2.drawFrame(0,9,64,27);
-u8g2.drawFrame(0,37,64,27);
+  u8g2.drawFrame(65, 9, 63, 27);
+  u8g2.drawFrame(0, 9, 64, 27);
+  u8g2.drawFrame(0, 37, 64, 27);
+  u8g2.sendBuffer();
+}
+
+void graphics_set_sd_state(bool sd_present)
+{
+  if (sd_present)
+    u8g2.drawXBMP(105, 1, sdEnabled_width, sdEnabled_height, sdEnabled_bits);
+  else
+    u8g2.drawXBMP(105, 1, sdDisabled_width, sdDisabled_height, sdDisabled_bits);
   u8g2.sendBuffer();
 }
