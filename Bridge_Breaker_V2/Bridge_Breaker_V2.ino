@@ -12,7 +12,8 @@ void setup() {
  }
 
 void loop() {
-
+led_set_mode(2);
 led_task();
 file_task();
+Serial.println(file_find_usable_number());
 }
