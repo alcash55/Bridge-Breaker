@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-const byte DialButton = 18;
+const byte DialButton = 2;
 volatile byte DialPress = LOW;
 boolean testing = false;
 unsigned long initMillis;
