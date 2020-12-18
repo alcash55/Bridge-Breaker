@@ -15,53 +15,53 @@ File bridge_breaker_output;
 byte sd_state = 0x00;
 byte sd_last_state = sd_state;
 
-void file_start()
+void file_start() // Configure pinmode for SD card detection
 {
   pinMode(sd_detect, INPUT_PULLUP);
 }
 
 void file_task()
 {
-  if (digitalRead(sd_detect)) {
+  if (digitalRead(sd_detect)) { // If no SD card, then SD is absent
     sd_state = SD_ABSENT;
   }
   else
   {
     switch (sd_state)
     {
-      case SD_ABSENT:
+      case SD_ABSENT: // If card is detected, then card is inserted
         sd_state = SD_INSERTED;
         break;
       case SD_INSERTED:
-        if (SD.begin(sd_chip_select))
+        if (SD.begin(sd_chip_select)) // If card can be initialized, it is ready to use and can be accessed by the MCU
         {
           sd_state = SD_READY;
         }
         else
         {
-          sd_state = SD_CARDERR;
+          sd_state = SD_CARDERR; // If card cannot be initialized, it is not ready and is in a state of error
         }
       default:;
     }
   }
 }
 
-uint16_t file_find_usable_number()
+uint16_t file_find_usable_number() //Return usable file number. Ex. If files exist from BB_0001 to BB_0012, then it will return 13 as BB_0013 is the next usable number.
 {
   uint16_t result = 0;
   if (sd_state == SD_READY)
   {
     for (int i = 1; i < 9999; i++)
     {
-      sprintf(fileSegment, "%04d", i);
+      sprintf(fileSegment, "%04d", i); //Convert integer to filename
       memcpy(fileName + 3, fileSegment, 4);
-      if (!SD.exists(fileName))return i;
+      if (!SD.exists(fileName))return i; //Check if filename exists
     }
   }
   return result; //It should never reach this
 }
 
-void file_open(uint16_t usable_number)
+void file_open(uint16_t usable_number) //Opens file with usable number input, initializes file by printing the header information
 {
   if (sd_state == SD_READY) {
     sprintf(fileSegment, "%04d", usable_number);
@@ -73,7 +73,7 @@ void file_open(uint16_t usable_number)
   }
 }
 
-void file_print(uint16_t usable_number, float seconds, float force, float displacement)
+void file_print(uint16_t usable_number, float seconds, float force, float displacement) //Prints test data to file, seconds, force, and displacement
 {
   if (sd_state == SD_READY) {
     bridge_breaker_output = SD.open(fileName, FILE_WRITE);
@@ -86,12 +86,12 @@ void file_print(uint16_t usable_number, float seconds, float force, float displa
   }
 }
 
-byte file_get_sd_state()
+byte file_get_sd_state() //Returns SD status byte
 {
 return sd_state;
 }
 
-bool file_sd_present()
+bool file_sd_present() //Returns true if SD is ready
 {
 if(sd_state==0xFF)return true;
 return false;  

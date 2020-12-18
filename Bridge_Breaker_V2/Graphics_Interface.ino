@@ -205,7 +205,7 @@ static const unsigned char alert_bits[] PROGMEM= {
  0x82,0x41,0x82,0x41,0x01,0x80,0xff,0xff};
 
 ///////////////////////// Graph-Ops /////////////////////////
-void graphics_start()
+void graphics_start() //Clear LCD and display Splash screen
 {
   u8g2.begin();
   u8g2.clearBuffer();
@@ -213,13 +213,13 @@ void graphics_start()
   u8g2.sendBuffer();
 }
 
-void graphics_main_indicator(bool test)
+void graphics_main_indicator(bool test) //Display main view with two inputs, this is unused
 {
   if(test)u8g2.drawXBMP(7, 26, mainTest_width, mainTest_height, mainTest_bits);
   else u8g2.drawXBMP(7, 26, mainCali_width, mainCali_height, mainCali_bits);
 }
 
-void graphics_main(bool sd)
+void graphics_main(bool sd) //Display main view with test button and SD state
 {
 u8g2.clearBuffer();
   u8g2.drawXBMP(0, 0, mainBG_width, mainBG_height, mainBG_bits);
@@ -232,7 +232,7 @@ u8g2.clearBuffer();
   u8g2.sendBuffer();
 }
 
-void graphics_test(uint16_t f_num, float seconds, float force, float displacement, bool sd)
+void graphics_test(uint16_t f_num, float seconds, float force, float displacement, bool sd) //Display test view with data that is updated whenever sensors are polled
 {
 char gfileName[12] = {"BB_0000.txt"};
 char gfileSegment[5] = {"0000"};
@@ -259,7 +259,7 @@ sprintf(gfileSegment, "%04d", f_num);
   u8g2.sendBuffer();
 }
 
-void graphics_display_error(byte errorType)
+void graphics_display_error(byte errorType) //Displays error on LCD, different byte codes for different errors
 {
 u8g2.clearBuffer();
 u8g2.drawXBMP(40,20, alert_width, alert_height, alert_bits);
@@ -275,7 +275,7 @@ break;
 u8g2.sendBuffer();
 }
 
-void graphics_set_sd_state(bool sd_present)
+void graphics_set_sd_state(bool sd_present) //Updates SD notification in top right of screen of 
 {
   if (sd_present)
     u8g2.drawXBMP(105, 1, sdEnabled_width, sdEnabled_height, sdEnabled_bits);

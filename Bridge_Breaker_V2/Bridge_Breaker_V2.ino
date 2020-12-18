@@ -1,5 +1,3 @@
-//#include <RotaryEncoderWithButton.h>
-//RotaryEncoderWithButton rotary(18, 19, 2);
 #include <Button.h>
 
 uint8_t state = 0;
@@ -25,16 +23,16 @@ void setup() {
 void loop() {
   switch (state)
   {
-    case 0:
-      graphics_main(file_sd_present());
+    case 0: 
+      graphics_main(file_sd_present());//Update main display SD card state
       if (button1.pressed()) {
-        if (file_sd_present())
+        if (file_sd_present())//Prevent state change if SD card is missing
         {
           state = 1;
         }
         else
         {
-         graphics_display_error(0x5D);
+         graphics_display_error(0x5D);//Display alert to user that there is an SD error
       delay(1000);
         }
       }
@@ -43,27 +41,27 @@ void loop() {
 
     case 1:
 
-      file_number = file_find_usable_number();
-      file_open(file_number);
+      file_number = file_find_usable_number(); //Acquire usable file number for name
+      file_open(file_number);//Init file with usable number
       seconds = 0;
-      daq_start_test();
+      daq_start_test();//Tare sensors
       state = 2;
       led_set_mode(2);
       break;
 
     case 2:
 led_set_mode(2);
-if (button1.pressed()) {
+if (button1.pressed()) { //End test
         state = 0;
       }
-      unsigned long poll_current_millis = millis();
+      unsigned long poll_current_millis = millis(); //Polling interval for sensors, when interval is reached, DAQ is polled for new values.
       if (poll_current_millis - poll_previous_millis >= poll_interval)
       {
         poll_previous_millis = poll_current_millis;
-        daq_poll();
-        file_print(file_number, seconds, daq_get_force(), daq_get_distance_mm());
-        graphics_test(file_number, seconds, daq_get_force(), daq_get_distance_mm(),file_sd_present());
-        seconds = seconds + poll_interval / 1000.0;
+        daq_poll(); //Poll DAQ
+        file_print(file_number, seconds, daq_get_force(), daq_get_distance_mm()); //Write Data to SD card
+        graphics_test(file_number, seconds, daq_get_force(), daq_get_distance_mm(),file_sd_present()); //Write Data to LCD
+        seconds = seconds + poll_interval / 1000.0; // Calculate seconds
       }
       break;
 
@@ -80,6 +78,6 @@ if (button1.pressed()) {
 
     default:;
   }
-  led_task();
-  file_task();
+  led_task(); //Update LEDs
+  file_task(); //Handle SD card state and config
 }
