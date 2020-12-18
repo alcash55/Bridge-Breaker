@@ -44,16 +44,6 @@ void file_task()
       default:;
     }
   }
-  if (sd_state != sd_last_state)
-  {
-    if (sd_state == 0xFF) {
-      graphics_set_sd_state(true);
-    }
-    else {
-      graphics_set_sd_state(false);
-    }
-  }
-  sd_last_state = sd_state;
 }
 
 uint16_t file_find_usable_number()
@@ -83,15 +73,26 @@ void file_open(uint16_t usable_number)
   }
 }
 
-void file_print(uint16_t usable_number, double seconds, double force, double displacement)
+void file_print(uint16_t usable_number, float seconds, float force, float displacement)
 {
   if (sd_state == SD_READY) {
     bridge_breaker_output = SD.open(fileName, FILE_WRITE);
-    bridge_breaker_output.print(seconds, 1);
+    bridge_breaker_output.print(seconds, 2);
     bridge_breaker_output.print("\t");
     bridge_breaker_output.print(force, 4);
     bridge_breaker_output.print("\t");
     bridge_breaker_output.println(displacement, 4);
     bridge_breaker_output.close();
   }
+}
+
+byte file_get_sd_state()
+{
+return sd_state;
+}
+
+bool file_sd_present()
+{
+if(sd_state==0xFF)return true;
+return false;  
 }

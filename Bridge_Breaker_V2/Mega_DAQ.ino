@@ -55,10 +55,10 @@ return (((external.sensors.encoder_steps - initial_steps)*5.0)/10000.0);
 
 float daq_get_weight()
 {
-return external.sensors.encoder_steps - initial_weight;
+return external.sensors.weight - initial_weight;
 }
 
 float daq_get_force()
 {
-return ((external.sensors.encoder_steps - initial_weight)*4.4822162);
+return ((external.sensors.weight - initial_weight)*4.4822162);
 }
