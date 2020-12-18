@@ -10,17 +10,23 @@ uint8_t led_mode;
 unsigned long led_previous_millis = 0;
 const long led_interval = 500;
 
+//No parameters
+//No return
 void led_start() //Configures led pin mode
 {
   pinMode(greenLED, OUTPUT);
   pinMode(redLED, OUTPUT);
 }
 
+//1 parameter - 8bit integer
+//No return
 void led_set_mode(uint8_t ledMode) //Changes mode for LEDs
 {
   led_mode = ledMode;
 }
 
+//No parameters
+//No return
 void led_task() //Checks led interval and changes LED states to match different modes
 {
 unsigned long led_current_millis = millis();

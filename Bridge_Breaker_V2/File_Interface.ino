@@ -15,12 +15,16 @@ File bridge_breaker_output;
 byte sd_state = 0x00;
 byte sd_last_state = sd_state;
 
+//No parameters
+//no return
 void file_start() // Configure pinmode for SD card detection
 {
   pinMode(sd_detect, INPUT_PULLUP);
 }
 
-void file_task()
+//No parameters
+//no return
+void file_task() // Monitors storage devices
 {
   if (digitalRead(sd_detect)) { // If no SD card, then SD is absent
     sd_state = SD_ABSENT;
@@ -46,6 +50,8 @@ void file_task()
   }
 }
 
+//No parameters
+//returns usable file number
 uint16_t file_find_usable_number() //Return usable file number. Ex. If files exist from BB_0001 to BB_0012, then it will return 13 as BB_0013 is the next usable number.
 {
   uint16_t result = 0;
@@ -61,6 +67,8 @@ uint16_t file_find_usable_number() //Return usable file number. Ex. If files exi
   return result; //It should never reach this
 }
 
+// 1 Parameter - usable file number 
+// no return
 void file_open(uint16_t usable_number) //Opens file with usable number input, initializes file by printing the header information
 {
   if (sd_state == SD_READY) {
@@ -72,6 +80,9 @@ void file_open(uint16_t usable_number) //Opens file with usable number input, in
     bridge_breaker_output.close();
   }
 }
+
+// 4 Parameters - file number, seconds, force, displacement
+// No return
 
 void file_print(uint16_t usable_number, float seconds, float force, float displacement) //Prints test data to file, seconds, force, and displacement
 {
@@ -86,11 +97,15 @@ void file_print(uint16_t usable_number, float seconds, float force, float displa
   }
 }
 
+//No parameters
+//Returns status byte
 byte file_get_sd_state() //Returns SD status byte
 {
 return sd_state;
 }
 
+//No parameters
+//Returns bool
 bool file_sd_present() //Returns true if SD is ready
 {
 if(sd_state==0xFF)return true;
